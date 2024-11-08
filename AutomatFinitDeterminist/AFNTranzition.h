@@ -9,5 +9,7 @@ public:
 
 	AFNTranzition(std::string fromState, std::string symbol, std::vector<std::string> toStates);
 	std::vector<std::string> GetToStates() const { return m_toStates; }
+
+	~AFNTranzition() override = default;
 };
 

@@ -7,5 +7,11 @@ class AFDTranzition : public Tranzition
 public:
 	
 	AFDTranzition(std::string fromState, std::string symbol, std::string toState);
+
+	std::string GetToState() const { return m_toState; }
+
+
+
+	~AFDTranzition() override = default;
 };
 

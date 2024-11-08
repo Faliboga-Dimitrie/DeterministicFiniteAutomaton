@@ -10,5 +10,7 @@ public:
 
 	NonDeterministicFiniteAutomaton() = default;
 	NonDeterministicFiniteAutomaton(std::vector<std::string> states, std::unordered_set<std::string> alphabet, std::vector<AFNTranzition> tranzitions, std::string initialState, std::unordered_set<std::string> finalStates);
+
+	~NonDeterministicFiniteAutomaton() override = default;
 };
 

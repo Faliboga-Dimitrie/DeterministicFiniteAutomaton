@@ -26,7 +26,13 @@ public:
 	Automaton(std::vector<std::string> states, std::unordered_set<std::string> alphabet, std::string initialState, std::unordered_set<std::string> finalStates);
 
 	void SetRegulateExpression(const std::string& expression) { m_regulateExpression = expression; }
-	std::string GetRegulateExpression() { return m_regulateExpression; }
-	std::string GetPostfixPoloishExpression() { return m_postfixPoloishExpression; }
+	std::string& GetRegulateExpression() { return m_regulateExpression; }
+	std::string& GetPostfixPoloishExpression() { return m_postfixPoloishExpression; }
+	std::string& GetInitialState() { return m_initialState; }
+	std::unordered_set<std::string>& GetFinalStates() { return m_finalStates; }
+	std::vector<std::string>& GetStates() { return m_states; }
+	std::unordered_set<std::string>& GetAlphabet() { return m_alphabet; }
+
+	virtual ~Automaton() = default;
 };
 
