@@ -18,5 +18,19 @@
     <ClCompile Include="AutomatFinitDeterminist.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DeterministicFiniteAutomaton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tranzition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DeterministicFiniteAutomaton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tranzition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
