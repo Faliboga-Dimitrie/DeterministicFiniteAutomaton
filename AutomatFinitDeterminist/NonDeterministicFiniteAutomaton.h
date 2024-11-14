@@ -9,7 +9,7 @@ class NonDeterministicFiniteAutomaton : public Automaton
 public:
 
 	NonDeterministicFiniteAutomaton() = default;
-	NonDeterministicFiniteAutomaton(std::vector<std::string> states, std::unordered_set<std::string> alphabet, std::vector<AFNTranzition> tranzitions, std::string initialState, std::unordered_set<std::string> finalStates);
+	NonDeterministicFiniteAutomaton(std::unordered_set<std::string> states, std::unordered_set<std::string> alphabet, std::vector<AFNTranzition> tranzitions, std::string initialState, std::unordered_set<std::string> finalStates);
 
 	~NonDeterministicFiniteAutomaton() override = default;
 };

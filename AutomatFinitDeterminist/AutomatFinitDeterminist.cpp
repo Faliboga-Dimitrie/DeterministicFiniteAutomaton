@@ -1,6 +1,9 @@
 #include <iostream>
+#include "Automaton.h"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	Automaton a;
+	a.regulateExpressionToPostfix();
+	std::cout << a.GetPostfixPoloishExpression();
 }

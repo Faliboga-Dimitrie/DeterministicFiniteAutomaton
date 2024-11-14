@@ -10,8 +10,6 @@ public:
 
 	std::string GetToState() const { return m_toState; }
 
-
-
 	~AFDTranzition() override = default;
 };
 

@@ -11,25 +11,23 @@ int Automaton::priority(char op)
     }
 }
 
-std::string& Automaton::addConcatenateSimbol(const std::string& expresion)
+void Automaton::addConcatenateSimbol()
 {
-    std::string newExpresion = expresion;
-    for (size_t i = 0; i < expresion.size() - 1; i++)
+    for (size_t i = 0; i < m_regulateExpression.size() - 1; i++)
     {
-        if ((isalnum(expresion[i]) || expresion[i] == ')' || expresion[i] == '*') &&
-            (isalnum(expresion[i + 1]) || expresion[i + 1] == '('))
+        if ((isalnum(m_regulateExpression[i]) || m_regulateExpression[i] == ')' || m_regulateExpression[i] == '*') &&
+            (isalnum(m_regulateExpression[i + 1]) || m_regulateExpression[i + 1] == '('))
         {
-            newExpresion.insert(i + 1, 1, '.');
+            m_regulateExpression.insert(i + 1, 1, '.');
         }
     }
-    return newExpresion;
 }
 
-void Automaton::infixToPostfix(std::string& infix)
+void Automaton::infixToPostfix()
 {
     std::stack<char> charStack;
 
-    for (char c : infix)
+    for (char c : m_regulateExpression)
     {
         if (isalnum(c))
         {
@@ -70,23 +68,34 @@ void Automaton::regulateExpressionToPostfix()
 {
     if (m_regulateExpression.empty())
     {
-        std::string expression;
-        std::cout << "The expression is empty\n";
-        std::cout << "Input the expression: ";
-        std::cin >> expression;
-        SetRegulateExpression(expression);
-        regulateExpressionToPostfix();
+		ReadRegulateExpression("regulateExpression.txt");
+
     }
-    else
-    {
-        infixToPostfix(addConcatenateSimbol(m_regulateExpression));
-    }
+    addConcatenateSimbol();
+    infixToPostfix();
 }
 
-Automaton::Automaton(std::vector<std::string> states, std::unordered_set<std::string> alphabet, std::string initialState, std::unordered_set<std::string> finalStates):
+Automaton::Automaton(std::unordered_set<std::string> states, std::unordered_set<std::string> alphabet, std::string initialState, std::unordered_set<std::string> finalStates):
     m_states{ states },
     m_alphabet{ alphabet },
     m_initialState{ initialState },
     m_finalStates{ finalStates }
 {
+}
+
+void Automaton::ReadRegulateExpression(const std::string& fileName)
+{
+	std::ifstream file(fileName);
+	if (!file.is_open())
+	{
+		std::cout << "The file " << fileName << " could not be opened\n";
+		return;
+	}
+
+	std::string line;
+	while (std::getline(file, line))
+	{
+		m_regulateExpression += line;
+	}
+	file.close();
 }

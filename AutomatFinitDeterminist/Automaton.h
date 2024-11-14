@@ -5,10 +5,11 @@
 #include <stack>
 #include <iostream>
 #include <string>
+#include <fstream>
 
 class Automaton
 {
-	std::vector<std::string> m_states;
+	std::unordered_set<std::string> m_states;
 	std::unordered_set<std::string> m_alphabet;
 	std::string m_initialState;
 	std::unordered_set<std::string> m_finalStates;
@@ -16,22 +17,22 @@ class Automaton
 	std::string m_postfixPoloishExpression;
 
 	int priority(char op);
-	std::string& addConcatenateSimbol(const std::string& expresion);
-	void infixToPostfix(std::string& infix);
-	void regulateExpressionToPostfix();
+	void addConcatenateSimbol();
+	void infixToPostfix();
 
 public:
 
 	Automaton() = default;
-	Automaton(std::vector<std::string> states, std::unordered_set<std::string> alphabet, std::string initialState, std::unordered_set<std::string> finalStates);
+	Automaton(std::unordered_set<std::string> states, std::unordered_set<std::string> alphabet, std::string initialState, std::unordered_set<std::string> finalStates);
 
-	void SetRegulateExpression(const std::string& expression) { m_regulateExpression = expression; }
-	std::string& GetRegulateExpression() { return m_regulateExpression; }
+	void ReadRegulateExpression(const std::string& fileName);
 	std::string& GetPostfixPoloishExpression() { return m_postfixPoloishExpression; }
 	std::string& GetInitialState() { return m_initialState; }
 	std::unordered_set<std::string>& GetFinalStates() { return m_finalStates; }
-	std::vector<std::string>& GetStates() { return m_states; }
+	std::unordered_set<std::string>& GetStates() { return m_states; }
 	std::unordered_set<std::string>& GetAlphabet() { return m_alphabet; }
+
+	void regulateExpressionToPostfix();
 
 	virtual ~Automaton() = default;
 };
