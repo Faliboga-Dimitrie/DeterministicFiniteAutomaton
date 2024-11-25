@@ -5,7 +5,7 @@ NonDeterministicFiniteAutomaton ConstructAutomaton::construct(std::string initia
 	std::stack<NonDeterministicFiniteAutomaton> automatons;
 
 	//Se creaza primul automat
-	NonDeterministicFiniteAutomaton firstAutomaton({ "q0, q1" }, { std::to_string(initialAutomaton[0]) }, { {"q0", std::to_string(initialAutomaton[0]), {"q1"}} }, "q0", { "q1" });
+	NonDeterministicFiniteAutomaton firstAutomaton({ "q0", "q1" }, { std::to_string(initialAutomaton[0]) }, { {"q0", std::to_string(initialAutomaton[0]), {"q1"}} }, "q0", { "q1" });
 
 	statesCounter += 2;
 
