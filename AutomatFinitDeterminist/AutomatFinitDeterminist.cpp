@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Automaton.h"
+#include "ConstructAutomaton.h"
 
 int main()
 {

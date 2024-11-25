@@ -13,6 +13,8 @@ public:
 	bool VerifyAutomaton();
 	void PrintAutomaton() ;
 	bool CheckWord(const std::string& word);
+	std::vector<AFDTranzition> GetTranzitions() { return m_tranzitions; }
+	void AddTranzition(AFDTranzition tranzition) { m_tranzitions.push_back(tranzition); }
 
 	~DeterministicFiniteAutomaton() override = default;
 };

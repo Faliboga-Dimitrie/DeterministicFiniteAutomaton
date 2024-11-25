@@ -31,6 +31,10 @@ public:
 	std::unordered_set<std::string>& GetFinalStates() { return m_finalStates; }
 	std::unordered_set<std::string>& GetStates() { return m_states; }
 	std::unordered_set<std::string>& GetAlphabet() { return m_alphabet; }
+	void AddState(std::string state) { m_states.insert(state); }
+	void AddFinalState(std::string state) { m_finalStates.insert(state); }
+	void SetInitialState(std::string intialState) { m_initialState = intialState; }
+	void SetFinalStates(std::unordered_set<std::string> finalStates) { m_finalStates = finalStates; }
 
 	void regulateExpressionToPostfix();
 
