@@ -1,11 +1,12 @@
 #pragma once
 #include "AFDTranzition.h"
-#include "Automaton.h"
+#include "NonDeterministicFiniteAutomaton.h"
 
 class DeterministicFiniteAutomaton : public Automaton
 {
 	
 	std::vector<AFDTranzition> m_tranzitions;
+	NonDeterministicFiniteAutomaton m_nfa;
 	
 public:
 	DeterministicFiniteAutomaton() = default;

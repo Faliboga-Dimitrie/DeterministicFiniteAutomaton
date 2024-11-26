@@ -1,6 +1,5 @@
 #include <iostream>
-#include "Automaton.h"
-#include "ConstructAutomaton.h"
+#include "DeterministicFiniteAutomaton.h"
 
 int main()
 {

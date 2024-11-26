@@ -1,14 +1,14 @@
 #include "Automaton.h"
 
-int Automaton::priority(char op)
+int Automaton::priority(AutomatonOperation op)
 {
-    switch (op)
-    {
-    case '|': return 1;
-    case '.': return 2;
-    case '*': return 3;
-    default: return 0;
-    }
+	switch (op)
+	{
+	case AutomatonOperation::UNION: return 1;
+	case AutomatonOperation::CONCATENATION: return 2;
+	case AutomatonOperation::KLEENE_STAR: return 3;
+	default: return 0;
+	}
 }
 
 void Automaton::addConcatenateSimbol()
@@ -48,7 +48,7 @@ void Automaton::infixToPostfix()
         }
         else
         {
-            while (!charStack.empty() && priority(charStack.top()) >= priority(c))
+            while (!charStack.empty() && priority(getOperation(charStack.top())) >= priority(getOperation(c)))
             {
                 m_postfixPoloishExpression += charStack.top();
                 charStack.pop();
@@ -62,6 +62,24 @@ void Automaton::infixToPostfix()
         m_postfixPoloishExpression += charStack.top();
         charStack.pop();
     }
+}
+
+Automaton::AutomatonOperation Automaton::getOperation(char c)
+{
+	if (c == '.')
+	{
+		return AutomatonOperation::CONCATENATION;
+	}
+	else if (c == '|')
+	{
+		return AutomatonOperation::UNION;
+	}
+	else if (c == '*')
+	{
+		return AutomatonOperation::KLEENE_STAR;
+	}
+	return AutomatonOperation::EROOR;
+
 }
 
 void Automaton::regulateExpressionToPostfix()
