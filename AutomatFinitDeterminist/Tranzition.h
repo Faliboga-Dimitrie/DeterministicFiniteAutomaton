@@ -19,6 +19,7 @@ public:
 	std::string GetSymbol() const { return m_symbol; }
 	bool IsInitial() const { return m_isInitial; }
 	bool IsFinal() const { return m_isFinal; }
+	void SetSymbol(std::string symbol) { m_symbol = symbol; }
 
 	virtual ~Tranzition() = default;
 };

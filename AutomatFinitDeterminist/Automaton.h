@@ -52,6 +52,7 @@ public:
 	void SetFinalStates(std::unordered_set<std::string> finalStates) { m_finalStates = finalStates; }
 	void SetAlphabet(std::unordered_set<std::string> alphabet) { m_alphabet = alphabet; }
 	void SetStates(std::unordered_set<std::string> states) { m_states = states; }
+	void AddSymbol(std::string symbol) { m_alphabet.insert(symbol); }
 
 	void regulateExpressionToPostfix();
 
