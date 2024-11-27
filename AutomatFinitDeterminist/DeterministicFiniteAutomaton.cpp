@@ -69,5 +69,71 @@ bool DeterministicFiniteAutomaton::VerifyAutomaton()
 	return true;
 }
 
+void DeterministicFiniteAutomaton::PrintAutomaton()
+{
+	std::cout << "States: ";
+	for (const auto& state : GetStates())
+	{
+		std::cout << state << " ";
+	}
+	std::cout << std::endl;
+	std::cout << "Alphabet: ";
+	for (const auto& symbol : GetAlphabet())
+	{
+		std::cout << symbol << " ";
+	}
+	std::cout << std::endl;
+	std::cout << "Initial state: " << GetInitialState() << std::endl;
+	std::cout << "Final states: ";
+	for (const auto& state : GetFinalStates())
+	{
+		std::cout << state << " ";
+	}
+	std::cout << std::endl;
+	std::cout << "Tranzitions: "<< std::endl;
+	for (const auto& tranzition : m_tranzitions)
+	{
+		std::cout << tranzition.GetFromState() << " -- " << tranzition.GetSymbol() << " --> " << tranzition.GetToState() << std::endl;
+	}
+}
+
+bool DeterministicFiniteAutomaton::CheckWord(const std::string& word)
+{
+	for (const auto& symbol : word)
+	{
+		if (GetAlphabet().find(std::string(1, symbol)) == GetAlphabet().end())
+		{
+			std::cout << "The symbol " << symbol << " is not in the alphabet\n";
+			return false;
+		}
+	}
+
+	std::string currentState = GetInitialState();
+	for (const auto& symbol : word)
+	{
+		bool found = false;
+		for (const auto& tranzition : m_tranzitions)
+		{
+			if (tranzition.GetFromState() == currentState && tranzition.GetSymbol() == std::string(1, symbol))
+			{
+				currentState = tranzition.GetToState();
+				found = true;
+				break;
+			}
+		}
+		if (!found)
+		{
+			return false;
+		}
+	}
+
+	if (GetFinalStates().find(currentState) == GetFinalStates().end())
+	{
+		return false;
+	}
+
+	return true;
+}
+
 
 
