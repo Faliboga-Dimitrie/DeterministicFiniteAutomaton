@@ -7,6 +7,8 @@ class DeterministicFiniteAutomaton : public Automaton
 	
 	std::vector<AFDTranzition> m_tranzitions;
 	NonDeterministicFiniteAutomaton m_nfa;
+
+	//void AFNtoAFD();
 	
 public:
 	DeterministicFiniteAutomaton() = default;

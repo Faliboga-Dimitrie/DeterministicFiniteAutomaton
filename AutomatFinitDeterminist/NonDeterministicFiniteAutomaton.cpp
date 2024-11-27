@@ -15,8 +15,21 @@ void NonDeterministicFiniteAutomaton::buildAutomaton(std::string regulateExpress
 {
 	std::stack<NonDeterministicFiniteAutomaton> automatons;
 	int statesCounter = 0;
+	std::unordered_set<std::string> FirstStates;
+	std::unordered_set<std::string> FirstAlphabet;
+	std::vector<AFNTranzition> FirstTranzition;
+	std::string FirstInState;
+	std::unordered_set<std::string> FirstFinStates;
+
+	FirstStates.insert("q0");
+	FirstStates.insert("q1");
+
+	FirstAlphabet.insert(regulateExpression.substr(0,1));
+	FirstTranzition.push_back({ "q0", regulateExpression.substr(0,1), {"q1"} });
+	FirstInState = "q0";
+	FirstFinStates.insert("q1");
 	//Se creaza primul automat
-	NonDeterministicFiniteAutomaton firstAutomaton({ "q0", "q1" }, { std::to_string(regulateExpression[0]) }, { {"q0", std::to_string(regulateExpression[0]), {"q1"}} }, "q0", { "q1" });
+	NonDeterministicFiniteAutomaton firstAutomaton(FirstStates, FirstAlphabet, FirstTranzition, FirstInState, FirstFinStates);
 
 	statesCounter += 2;
 
@@ -181,9 +194,9 @@ void NonDeterministicFiniteAutomaton::buildAutomaton(std::string regulateExpress
 			currentStates.insert(state1);
 			currentStates.insert(state2);
 
-			currentAlphabet.insert(std::to_string(regulateExpression[i]));
+			currentAlphabet.insert(regulateExpression.substr(i, i - 1));
 
-			currentTranzition.push_back({ state1, std::to_string(regulateExpression[i]), {state2} });
+			currentTranzition.push_back({ state1, regulateExpression.substr(i,i-1), {state2} });
 
 			currentInState = state1;
 
@@ -201,3 +214,57 @@ void NonDeterministicFiniteAutomaton::buildAutomaton(std::string regulateExpress
 	}
 	*this = automatons.top();
 }
+
+//std::unordered_set<std::string> NonDeterministicFiniteAutomaton::EClosure(const std::unordered_set<std::string>& states)
+//{
+//	std::unordered_set<std::string> closure = states; 
+//	std::stack<std::string> toProcess;   
+//
+//	for (const auto& state : states)
+//	{
+//		toProcess.push(state);
+//	}
+//
+//	while (!toProcess.empty())
+//	{
+//		std::string currentState = toProcess.top();
+//		toProcess.pop();
+//
+//		for (const auto& tranzition : m_tranzitions)
+//		{
+//			if (tranzition.GetFromState() == currentState && tranzition.GetSymbol() == "")
+//			{
+//				for (const auto& nextState : tranzition.GetToStates())
+//				{
+//					if (closure.find(nextState) == closure.end())
+//					{
+//						closure.insert(nextState);
+//						toProcess.push(nextState);
+//					}
+//				}
+//			}
+//		}
+//	}
+//
+//	return closure;
+//}
+//
+//std::unordered_set<std::string> NonDeterministicFiniteAutomaton::Move(const std::unordered_set<std::string>& states, const std::string& symbol)
+//{
+//	std::unordered_set<std::string> newStates;
+//	for (const auto& state : states)
+//	{
+//		for (const auto& tranzition : m_tranzitions)
+//		{
+//			if (tranzition.GetFromState() == state && tranzition.GetSymbol() == symbol)
+//			{
+//				for (const auto& nextState : tranzition.GetToStates())
+//				{
+//					newStates.insert(nextState);
+//				}
+//			}
+//		}
+//	}
+//
+//	return newStates;
+//}

@@ -17,6 +17,9 @@ public:
 	void buildAutomaton(std::string regulateExpression);
 	const std::vector<AFNTranzition>& GetTranzitions() const { return m_tranzitions; }
 
+	/*std::unordered_set<std::string> EClosure(const std::unordered_set<std::string>& states);
+	std::unordered_set<std::string> Move(const std::unordered_set<std::string>& states, const std::string& symbol);*/
+
 	~NonDeterministicFiniteAutomaton() override = default;
 };
 
