@@ -122,12 +122,12 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(NonDeterministicFiniteAutomat
 	SetInitialState("q0");
 	stateNumber = 1;
 
-	std::stack<std::string> statesStack;
-	statesStack.push("q0");
+	std::queue<std::string> statesQueue;
+	statesQueue.push("q0");
 
-	while (!statesStack.empty()) {
-		std::string currentState = statesStack.top();
-		statesStack.pop();
+	while (!statesQueue.empty()) {
+		std::string currentState = statesQueue.front();
+		statesQueue.pop();
 		AddState(currentState);
 
 		for (std::string symbol : nfa.GetAlphabet()) {
@@ -167,7 +167,7 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(NonDeterministicFiniteAutomat
 			}
 
 			std::string nextState = "q" + std::to_string(stateNumber + 1);
-			statesStack.push(nextState);
+			statesQueue.push(nextState);
 
 			newStates[nextState] = lambdaClose;
 			AddState(nextState);
