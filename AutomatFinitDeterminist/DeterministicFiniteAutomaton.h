@@ -2,7 +2,7 @@
 #include "AFDTranzition.h"
 #include "NonDeterministicFiniteAutomaton.h"
 #include <unordered_map>
-
+#include <queue>
 class DeterministicFiniteAutomaton : public Automaton
 {
 	
