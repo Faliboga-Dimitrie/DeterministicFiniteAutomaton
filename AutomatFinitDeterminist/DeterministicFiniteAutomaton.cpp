@@ -91,52 +91,66 @@ std::unordered_set<std::string> DeterministicFiniteAutomaton::getLambdaClose(std
 void DeterministicFiniteAutomaton::convertAFNtoAFD(NonDeterministicFiniteAutomaton nfa)
 {
 	std::unordered_map<std::string, std::unordered_set<std::string>> newStates;
-	size_t stateNumber = 0;
 	std::vector<AFNTranzition> tranzitions = nfa.GetTranzitions();
-
-	//Folosim un algoritm de tip DFS prin care obtinem toate starile conectate catre starea initiala care fac parte dintr-o tranzitie lambda
-	std::unordered_set<std::string> lambdaClose;
-	bool firstLambdaTranzitionFound = false;
+	
+	SetInitialState("q0");
+	SetAlphabet(nfa.GetAlphabet());
+	size_t stateNumber = 0;
+	bool foundLamda = false;
 
 	//Cautam prima stare din AFN care face parte dintr-o tranzitie lambda
-	while (!firstLambdaTranzitionFound) {
-		std::string firstLambdaTranzition = "q" + std::to_string(stateNumber);
-		lambdaClose = getLambdaClose(firstLambdaTranzition, nfa.GetTranzitions());
-		
+	//Pana gasim prima tranzitie lambda, adaugam toate tranzitile normale pe care le gasim din AFN in AFD
+	while (stateNumber < nfa.GetStates().size()) {
 		for (auto& tr : tranzitions) {
-			if (tr.GetFromState() == firstLambdaTranzition && tr.GetSymbol() == "")
+			std::string currentState = "q" + std::to_string(stateNumber);
+
+			if (tr.GetFromState() == currentState && tr.GetSymbol() == "")
 			{
-				firstLambdaTranzitionFound = true;
+				foundLamda = true;
 				break;
 			}
 
+			AddState(currentState);
+			AddTranzition({ tr.GetFromState(), tr.GetSymbol(), tr.GetToStates()[0] });
+			if (nfa.GetFinalStates().find(currentState) != nfa.GetFinalStates().end())
+				AddFinalState(currentState);
 		}
+
+		if (foundLamda)
+			break;
 
 		stateNumber++;
 	}
 
-	//Initializam prima stare din AFD ca fiind multimea lambda inchid gasita mai sus
-	newStates["q0"] = lambdaClose;
+	//Daca nu am gasit tranzitii lambda, lasam automatul asa cum este
+	if (stateNumber == nfa.GetStates().size())
+	{
+		SetFinalStates(nfa.GetFinalStates());
+		return;
+	}
+
+	//Folosim un algoritm de tip DFS prin care obtinem multimea starilor de tip lambda inchis a primului element care face parte dintr-o pozitie lambda 
+	std::unordered_set<std::string> lambdaClose;
+	lambdaClose = getLambdaClose("q" + std::to_string(stateNumber), nfa.GetTranzitions());
+
+	//Initializam starea q[stateNumber] din AFD ca fiind multimea lambda inchisa gasita mai sus
+	newStates["q" + std::to_string(stateNumber)] = lambdaClose;
 	lambdaClose.clear();
+	AddState("q" + std::to_string(stateNumber));
 
-	SetInitialState("q0");
-	stateNumber = 1;
+	std::queue<std::string> queueStates;
+	queueStates.push("q" + std::to_string(stateNumber));
 
-	std::queue<std::string> statesQueue;
-	statesQueue.push("q0");
-
-	while (!statesQueue.empty()) {
-		std::string currentState = statesQueue.front();
-		statesQueue.pop();
+	while (!queueStates.empty()) {
+		std::string currentState = queueStates.front();
+		queueStates.pop();
 		AddState(currentState);
 
 		for (std::string symbol : nfa.GetAlphabet()) {
 
-			AddSymbol(symbol);
-
 			std::unordered_set<std::string> statesSet;
 
-			//Gasim tranzitile care plec de la o stare specifica cu un simbol specific
+			//Gasim tranzitile care plec de la o stare specifica cu un simbol specific (adica cream functia de tranzitii pentru starea curenta
 			for (std::string state : newStates[currentState]) {
 
 				for (auto& tr : tranzitions) {
@@ -151,23 +165,25 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(NonDeterministicFiniteAutomat
 			if (statesSet.empty())
 				continue;
 
-			//Daca aceasta multime de lambda inchisi exista deja in map-ul nostru, atunci tranzitia va fi intre currentState si cealalta stare deja existenta
+			//Daca aceasta functie de tranziti exista deja in map-ul nostru, atunci tranzitia va fi intre currentState si cealalta stare deja existenta
 			for (auto& p : newStates) {
 				if (p.second == statesSet) {
-					AddState(p.first);
+					//AddState(p.first);
 					AddTranzition({ currentState, symbol, p.first });
 					continue;
 				}
 			}
 
 			//Daca nu exista in map, atunci trebuia sa cream o noua stare
+			//Cream functia de lambda inchis pentru starea curenta, care e formata din mutlimile lambda inchis a starilor din functia sa de tranzitii
 			for (std::string state : statesSet) {
 				std::unordered_set<std::string> lambdaAux = getLambdaClose(state, nfa.GetTranzitions());
 				lambdaClose.insert(lambdaAux.begin(), lambdaAux.end());
 			}
 
-			std::string nextState = "q" + std::to_string(stateNumber + 1);
-			statesQueue.push(nextState);
+			//Noua stare cu care currentState este in relatie de tranzitie se va adauga in queue
+			std::string nextState = "q" + std::to_string(++stateNumber);
+			queueStates.push(nextState);
 
 			newStates[nextState] = lambdaClose;
 			AddState(nextState);
@@ -175,6 +191,13 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(NonDeterministicFiniteAutomat
 
 		}
 	}
+
+	//Se adauga starile finale
+	for (auto& p : newStates)
+		for (std::string state : p.second)
+			if (nfa.GetFinalStates().find(state) != nfa.GetFinalStates().end())
+				AddFinalState(state);
+
 }
 
 bool DeterministicFiniteAutomaton::VerifyAutomaton()
