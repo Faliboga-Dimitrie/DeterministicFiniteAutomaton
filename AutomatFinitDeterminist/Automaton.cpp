@@ -93,11 +93,10 @@ void Automaton::regulateExpressionToPostfix()
     infixToPostfix();
 }
 
-Automaton::Automaton(std::unordered_set<std::string> states, std::unordered_set<std::string> alphabet, std::vector<Tranzition> tranzitions, std::string initialState, std::unordered_set<std::string> finalStates):
+Automaton::Automaton(std::unordered_set<std::string> states, std::unordered_set<std::string> alphabet, std::string initialState, std::unordered_set<std::string> finalStates):
     m_states{ states },
     m_alphabet{ alphabet },
     m_initialState{ initialState },
-    m_tranzitions{ tranzitions },
     m_finalStates{ finalStates }
 {
 }

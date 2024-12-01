@@ -1,12 +1,13 @@
 #include "NonDeterministicFiniteAutomaton.h"
 
-NonDeterministicFiniteAutomaton::NonDeterministicFiniteAutomaton(std::unordered_set<std::string> states, std::unordered_set<std::string> alphabet, std::vector<Tranzition> tranzitions, std::string initialState, std::unordered_set<std::string> finalStates):
-	Automaton(states, alphabet, tranzitions, initialState, finalStates)
+NonDeterministicFiniteAutomaton::NonDeterministicFiniteAutomaton(std::unordered_set<std::string> states, std::unordered_set<std::string> alphabet, std::vector<AFNTranzition> tranzitions, std::string initialState, std::unordered_set<std::string> finalStates):
+	Automaton(states, alphabet, initialState, finalStates),
+	m_tranzitions{ tranzitions }
 {
 }
 
 NonDeterministicFiniteAutomaton::NonDeterministicFiniteAutomaton(const NonDeterministicFiniteAutomaton& automaton) :
-	Automaton(automaton)
+	Automaton(automaton), m_tranzitions{ automaton.GetTranzitions() }
 {
 }
 
@@ -16,7 +17,7 @@ void NonDeterministicFiniteAutomaton::buildAutomaton(std::string regulateExpress
 	int statesCounter = 0;
 	std::unordered_set<std::string> FirstStates;
 	std::unordered_set<std::string> FirstAlphabet;
-	std::vector<Tranzition> FirstTranzition;
+	std::vector<AFNTranzition> FirstTranzition;
 	std::string FirstInState;
 	std::unordered_set<std::string> FirstFinStates;
 
@@ -43,7 +44,7 @@ void NonDeterministicFiniteAutomaton::buildAutomaton(std::string regulateExpress
 		std::unordered_set<std::string> currentStates;
 
 		std::unordered_set<std::string> currentAlphabet;
-		std::vector<Tranzition> currentTranzition;
+		std::vector<AFNTranzition> currentTranzition;
 		std::string currentInState;
 		std::unordered_set<std::string> currentFinStates;
 
@@ -69,8 +70,8 @@ void NonDeterministicFiniteAutomaton::buildAutomaton(std::string regulateExpress
 			currentAlphabet.insert(alphabet2.begin(), alphabet2.end());
 
 			//Se combina tranzitile celor 2 automate
-			std::vector<Tranzition> tranzitionSet1 = automaton1.GetTranzitions();
-			std::vector<Tranzition> tranzitionSet2 = automaton2.GetTranzitions();
+			std::vector<AFNTranzition> tranzitionSet1 = automaton1.GetTranzitions();
+			std::vector<AFNTranzition> tranzitionSet2 = automaton2.GetTranzitions();
 			currentTranzition.insert(currentTranzition.end(), tranzitionSet1.begin(), tranzitionSet1.end());
 			currentTranzition.insert(currentTranzition.end(), tranzitionSet2.begin(), tranzitionSet2.end());
 
@@ -79,8 +80,8 @@ void NonDeterministicFiniteAutomaton::buildAutomaton(std::string regulateExpress
 
 			//Ultima tranzitie a primului automat isi schimba toState-ul catre starea initiala a celui de al doilea automat
 			for (auto& tr : currentTranzition) {
-				if (tr.GetToState() == state3) {
-					tr.SetToState(automaton2.GetInitialState());
+				if (tr.GetToStates()[0] == state3) {
+					tr.SetToStates({ automaton2.GetInitialState() });
 					break;
 				}
 			}
@@ -125,8 +126,8 @@ void NonDeterministicFiniteAutomaton::buildAutomaton(std::string regulateExpress
 			currentAlphabet.insert(alphabet2.begin(), alphabet2.end());
 
 			//Se combina tranzitile celor 2 automate
-			std::vector<Tranzition> tranzitionSet1 = automaton1.GetTranzitions();
-			std::vector<Tranzition> tranzitionSet2 = automaton2.GetTranzitions();
+			std::vector<AFNTranzition> tranzitionSet1 = automaton1.GetTranzitions();
+			std::vector<AFNTranzition> tranzitionSet2 = automaton2.GetTranzitions();
 			currentTranzition.insert(currentTranzition.end(), tranzitionSet1.begin(), tranzitionSet1.end());
 			currentTranzition.insert(currentTranzition.end(), tranzitionSet2.begin(), tranzitionSet2.end());
 
@@ -195,7 +196,7 @@ void NonDeterministicFiniteAutomaton::buildAutomaton(std::string regulateExpress
 
 			currentAlphabet.insert(regulateExpression.substr(i, i - 1));
 
-			currentTranzition.push_back({ state1, regulateExpression.substr(i,i-1), state2 });
+			currentTranzition.push_back({ state1, regulateExpression.substr(i,i-1), {state2} });
 
 			currentInState = state1;
 

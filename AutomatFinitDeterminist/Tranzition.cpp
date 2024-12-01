@@ -1,8 +1,7 @@
 #include "Tranzition.h"
 
-Tranzition::Tranzition(std::string fromState, std::string symbol, std::string toState) :
+Tranzition::Tranzition(std::string fromState, std::string symbol) :
 	m_fromState{ fromState },
-	m_symbol{ symbol },
-	m_toState{ toState }
+	m_symbol{ symbol }
 {
 }

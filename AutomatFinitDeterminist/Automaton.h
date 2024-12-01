@@ -6,7 +6,6 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include "Tranzition.h"
 
 class Automaton
 {
@@ -30,7 +29,6 @@ private:
 	std::unordered_set<std::string> m_finalStates;
 	std::string m_regulateExpression;
 	std::string m_postfixPoloishExpression;
-	std::vector<Tranzition> m_tranzitions;
 
 	int priority(AutomatonOperation op);
 	void addConcatenateSimbol();
@@ -39,7 +37,7 @@ private:
 public:
 
 	Automaton() = default;
-	Automaton(std::unordered_set<std::string> states, std::unordered_set<std::string> alphabet, std::vector<Tranzition> tranzitions, std::string initialState, std::unordered_set<std::string> finalStates);
+	Automaton(std::unordered_set<std::string> states, std::unordered_set<std::string> alphabet, std::string initialState, std::unordered_set<std::string> finalStates);
 	Automaton(const Automaton& automaton) = default;
 
 	void ReadRegulateExpression(const std::string& fileName);
@@ -55,8 +53,6 @@ public:
 	void SetAlphabet(std::unordered_set<std::string> alphabet) { m_alphabet = alphabet; }
 	void SetStates(std::unordered_set<std::string> states) { m_states = states; }
 	void AddSymbol(std::string symbol) { m_alphabet.insert(symbol); }
-	std::vector<Tranzition> GetTranzitions() { return m_tranzitions; }
-	void AddTranzition(Tranzition tranzition) { m_tranzitions.push_back(tranzition); }
 
 	void regulateExpressionToPostfix();
 
