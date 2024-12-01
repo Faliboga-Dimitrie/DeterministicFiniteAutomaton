@@ -62,13 +62,12 @@
 //	m_tranzitions = tranzitions;
 //}
 
-DeterministicFiniteAutomaton::DeterministicFiniteAutomaton(std::unordered_set<std::string> states, std::unordered_set<std::string> alphabet, std::vector<AFDTranzition> tranzitions, std::string initialState, std::unordered_set<std::string> finalStates):
-	Automaton(states, alphabet, initialState, finalStates),
-	m_tranzitions{ tranzitions }
+DeterministicFiniteAutomaton::DeterministicFiniteAutomaton(std::unordered_set<std::string> states, std::unordered_set<std::string> alphabet, std::vector<Tranzition> tranzitions, std::string initialState, std::unordered_set<std::string> finalStates):
+	Automaton(states, alphabet, tranzitions, initialState, finalStates)
 {
 }
 
-std::unordered_set<std::string> DeterministicFiniteAutomaton::getLambdaClose(std::string state, std::vector<AFNTranzition> tranzitions) {
+std::unordered_set<std::string> DeterministicFiniteAutomaton::getLambdaClose(std::string state, std::vector<Tranzition> tranzitions) {
 	std::unordered_set<std::string> lambdaClose;
 	std::stack<std::string> stackStates;
 	stackStates.push(state);
@@ -81,7 +80,7 @@ std::unordered_set<std::string> DeterministicFiniteAutomaton::getLambdaClose(std
 
 		for (auto& tr : tranzitions) {
 			if (tr.GetFromState() == currentState && tr.GetSymbol() == "")
-				stackStates.push(tr.GetToStates()[0]);
+				stackStates.push(tr.GetToState());
 		}
 	}
 
@@ -91,7 +90,7 @@ std::unordered_set<std::string> DeterministicFiniteAutomaton::getLambdaClose(std
 void DeterministicFiniteAutomaton::convertAFNtoAFD(NonDeterministicFiniteAutomaton nfa)
 {
 	std::unordered_map<std::string, std::unordered_set<std::string>> newStates;
-	std::vector<AFNTranzition> tranzitions = nfa.GetTranzitions();
+	std::vector<Tranzition> tranzitions = nfa.GetTranzitions();
 	
 	SetInitialState("q0");
 	SetAlphabet(nfa.GetAlphabet());
@@ -111,7 +110,7 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(NonDeterministicFiniteAutomat
 			}
 
 			AddState(currentState);
-			AddTranzition({ tr.GetFromState(), tr.GetSymbol(), tr.GetToStates()[0] });
+			AddTranzition({ tr.GetFromState(), tr.GetSymbol(), tr.GetToState() });
 			if (nfa.GetFinalStates().find(currentState) != nfa.GetFinalStates().end())
 				AddFinalState(currentState);
 		}
@@ -156,7 +155,7 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(NonDeterministicFiniteAutomat
 				for (auto& tr : tranzitions) {
 
 					if (tr.GetFromState() == state && tr.GetSymbol() == symbol)
-						statesSet.insert(tr.GetToStates()[0]);
+						statesSet.insert(tr.GetToState());
 
 				}
 			}
@@ -231,7 +230,7 @@ bool DeterministicFiniteAutomaton::VerifyAutomaton()
 		}
 	}
 
-	for (const auto& tranzition : m_tranzitions)
+	for (const auto& tranzition : GetTranzitions())
 	{
 		if (tranzition.IsInitial() == true)
 		{
@@ -286,7 +285,7 @@ void DeterministicFiniteAutomaton::PrintAutomaton()
 	}
 	std::cout << std::endl;
 	std::cout << "Tranzitions: "<< std::endl;
-	for (const auto& tranzition : m_tranzitions)
+	for (const auto& tranzition : GetTranzitions())
 	{
 		std::cout << tranzition.GetFromState() << " -- " << tranzition.GetSymbol() << " --> " << tranzition.GetToState() << std::endl;
 	}
@@ -307,7 +306,7 @@ bool DeterministicFiniteAutomaton::CheckWord(const std::string& word)
 	for (const auto& symbol : word)
 	{
 		bool found = false;
-		for (const auto& tranzition : m_tranzitions)
+		for (const auto& tranzition : GetTranzitions())
 		{
 			if (tranzition.GetFromState() == currentState && tranzition.GetSymbol() == std::string(1, symbol))
 			{

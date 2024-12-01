@@ -127,8 +127,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AFDTranzition.cpp" />
-    <ClCompile Include="AFNTranzition.cpp" />
     <ClCompile Include="AutomatFinitDeterminist.cpp" />
     <ClCompile Include="Automaton.cpp" />
     <ClCompile Include="DeterministicFiniteAutomaton.cpp" />
@@ -136,8 +134,6 @@
     <ClCompile Include="Tranzition.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AFDTranzition.h" />
-    <ClInclude Include="AFNTranzition.h" />
     <ClInclude Include="Automaton.h" />
     <ClInclude Include="DeterministicFiniteAutomaton.h" />
     <ClInclude Include="NonDeterministicFiniteAutomaton.h" />

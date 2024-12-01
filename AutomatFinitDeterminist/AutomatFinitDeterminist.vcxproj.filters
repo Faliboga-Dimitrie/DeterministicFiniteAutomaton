@@ -24,12 +24,6 @@
     <ClCompile Include="Tranzition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AFDTranzition.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AFNTranzition.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Automaton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -42,12 +36,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Tranzition.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AFDTranzition.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AFNTranzition.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Automaton.h">
