@@ -22,7 +22,6 @@ public:
 	void convertAFNtoAFD(const std::string& regulateExpresionFileName);
 
 	bool VerifyAutomaton();
-	void PrintAutomaton();
 	bool CheckWord(const std::string& word);
 
 	~DeterministicFiniteAutomaton() override = default;

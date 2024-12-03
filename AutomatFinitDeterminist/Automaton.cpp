@@ -122,3 +122,31 @@ void Automaton::regulateExpressionToPostfix(const std::string& fileName)
     addConcatenateSimbol();
     infixToPostfix();
 }
+
+void Automaton::PrintAutomaton()
+{
+    std::cout << "States: ";
+    for (const auto& state : GetStates())
+    {
+        std::cout << state << " ";
+    }
+    std::cout << std::endl;
+    std::cout << "Alphabet: ";
+    for (const auto& symbol : GetAlphabet())
+    {
+        std::cout << symbol << " ";
+    }
+    std::cout << std::endl;
+    std::cout << "Initial state: " << GetInitialState() << std::endl;
+    std::cout << "Final states: ";
+    for (const auto& state : GetFinalStates())
+    {
+        std::cout << state << " ";
+    }
+    std::cout << std::endl;
+    std::cout << "Tranzitions: " << std::endl;
+    for (const auto& tranzition : GetTranzitions())
+    {
+        std::cout << tranzition.GetFromState() << " -- " << tranzition.GetSymbol() << " --> " << tranzition.GetToState() << std::endl;
+    }
+}

@@ -1,67 +1,5 @@
 #include "DeterministicFiniteAutomaton.h"
 
-
-//void DeterministicFiniteAutomaton::AFNtoAFD()
-//{
-//	Automaton::regulateExpressionToPostfix();
-//	m_nfa.buildAutomaton(GetPostfixPoloishExpression());
-//
-//	std::unordered_set<std::string> states;
-//	std::unordered_set<std::string> alphabet;
-//	std::vector<AFDTranzition> tranzitions;
-//	std::unordered_set<std::string> finalStates;
-//	std::string initialState = GetInitialState();
-//	std::unordered_set<std::string> initialStateSet;
-//	initialStateSet.insert(initialState);
-//	std::unordered_set<std::string> initialStateSetClosure = m_nfa.EClosure(initialStateSet);
-//	std::vector<std::unordered_set<std::string>> statesSet;
-//	statesSet.push_back(initialStateSetClosure);
-//	states.insert(m_nfa.GetInitialState());
-//	alphabet = m_nfa.GetAlphabet();
-//	for (size_t i = 0; i < statesSet.size(); i++)
-//	{
-//		for (const auto& symbol : alphabet)
-//		{
-//			std::unordered_set<std::string> newStateSet = m_nfa.EClosure(m_nfa.Move(statesSet[i], symbol));
-//			if (newStateSet.empty())
-//			{
-//				continue;
-//			}
-//			bool found = false;
-//			for (size_t j = 0; j < statesSet.size(); j++)
-//			{
-//				if (newStateSet == statesSet[j])
-//				{
-//					found = true;
-//					tranzitions.push_back(AFDTranzition("q" + std::to_string(i), symbol, "q" + std::to_string(j)));
-//					break;
-//				}
-//			}
-//			if (!found)
-//			{
-//				statesSet.push_back(newStateSet);
-//				tranzitions.push_back(AFDTranzition("q" + std::to_string(i), symbol, "q" + std::to_string(statesSet.size() - 1)));
-//			}
-//		}
-//	}
-//	for (size_t i = 0; i < statesSet.size(); i++)
-//	{
-//		for (const auto& state : statesSet[i])
-//		{
-//			if (m_nfa.GetFinalStates().find(state) != m_nfa.GetFinalStates().end())
-//			{
-//				finalStates.insert("q" + std::to_string(i));
-//				break;
-//			}
-//		}
-//	}
-//	SetStates(states);
-//	SetAlphabet(alphabet);
-//	SetInitialState("q0");
-//	SetFinalStates(finalStates);
-//	m_tranzitions = tranzitions;
-//}
-
 DeterministicFiniteAutomaton::DeterministicFiniteAutomaton(const std::unordered_set<std::string>& states,
 	const std::unordered_set<std::string>& alphabet,
 	const std::vector<Tranzition>& tranzitions,
@@ -141,7 +79,7 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(const std::string& regulateEx
 	//Initializam starea firstLambda din AFD ca fiind multimea lambda inchisa gasita mai sus
 	std::unordered_set<std::string> firstLambdaClose = getLambdaClose(firstLambda, m_nfa.GetTranzitions());
 	newStates[firstLambda] = firstLambdaClose;
-	size_t firstLambdaNumber = firstLambda[1] - '0'; //folosit pentru numararea starilor
+	size_t firstLambdaNumber = std::stoi(firstLambda.substr(1)); //folosit pentru numararea starilor
 
 	std::queue<std::string> queueStates;
 	queueStates.push(firstLambda);
@@ -153,6 +91,7 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(const std::string& regulateEx
 
 		for (std::string symbol : m_nfa.GetAlphabet()) {
 
+			bool foundState = false;
 			std::unordered_set<std::string> statesSet;
 
 			//Cream functia de tranzitii pentru starea curenta
@@ -170,18 +109,6 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(const std::string& regulateEx
 			if (statesSet.empty())
 				continue;
 
-			//Daca aceasta functie de tranziti exista deja in map-ul nostru, atunci tranzitia va fi intre currentState si cealalta stare deja existenta
-			bool foundState = false;
-			for (auto& p : newStates) {
-				if (p.second == statesSet) {
-					AddTranzition({ currentState, symbol, p.first });
-					foundState = true;
-					break;
-				}
-			}
-			if (foundState)
-				continue;
-
 			//Daca nu exista in map, atunci trebuia sa cream o noua stare
 			//Cream functia de lambda inchis pentru starea curenta, care e formata din multimile lambda inchis a starilor din functia sa de tranzitii
 			std::unordered_set<std::string> lambdaClose;
@@ -189,6 +116,17 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(const std::string& regulateEx
 				std::unordered_set<std::string> lambdaAux = getLambdaClose(state, m_nfa.GetTranzitions());
 				lambdaClose.insert(lambdaAux.begin(), lambdaAux.end());
 			}
+
+			//Daca aceasta functie de tranziti exista deja in map-ul nostru, atunci tranzitia va fi intre currentState si cealalta stare deja existenta
+			for (auto& p : newStates) {
+				if (p.second == lambdaClose) {
+					AddTranzition({ currentState, symbol, p.first });
+					foundState = true;
+					break;
+				}
+			}
+			if (foundState)
+				continue;
 
 			//Noua stare cu care currentState este in relatie de tranzitie se va adauga in queue
 			std::string nextState = "q" + std::to_string(++firstLambdaNumber);
@@ -204,7 +142,7 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(const std::string& regulateEx
 	for (auto& p : newStates)
 		for (std::string state : p.second)
 			if (m_nfa.GetFinalStates().find(state) != m_nfa.GetFinalStates().end())
-				AddFinalState(state); 
+				AddFinalState(p.first);
 }
 
 bool DeterministicFiniteAutomaton::VerifyAutomaton()
@@ -269,34 +207,6 @@ bool DeterministicFiniteAutomaton::VerifyAutomaton()
 	}
 
 	return true;
-}
-
-void DeterministicFiniteAutomaton::PrintAutomaton()
-{
-	std::cout << "States: ";
-	for (const auto& state : GetStates())
-	{
-		std::cout << state << " ";
-	}
-	std::cout << std::endl;
-	std::cout << "Alphabet: ";
-	for (const auto& symbol : GetAlphabet())
-	{
-		std::cout << symbol << " ";
-	}
-	std::cout << std::endl;
-	std::cout << "Initial state: " << GetInitialState() << std::endl;
-	std::cout << "Final states: ";
-	for (const auto& state : GetFinalStates())
-	{
-		std::cout << state << " ";
-	}
-	std::cout << std::endl;
-	std::cout << "Tranzitions: "<< std::endl;
-	for (const auto& tranzition : GetTranzitions())
-	{
-		std::cout << tranzition.GetFromState() << " -- " << tranzition.GetSymbol() << " --> " << tranzition.GetToState() << std::endl;
-	}
 }
 
 bool DeterministicFiniteAutomaton::CheckWord(const std::string& word)
