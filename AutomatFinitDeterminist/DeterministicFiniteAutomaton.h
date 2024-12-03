@@ -12,10 +12,15 @@ class DeterministicFiniteAutomaton : public Automaton
 	
 public:
 	DeterministicFiniteAutomaton() = default;
-	DeterministicFiniteAutomaton(std::unordered_set<std::string> states, std::unordered_set<std::string> alphabet, std::vector<Tranzition> tranzitions, std::string initialState, std::unordered_set<std::string> finalStates);
-	std::unordered_set<std::string> getLambdaClose(std::string state, std::vector<Tranzition> tranzitions);
-	bool hasNoEmptySets(const std::unordered_map<std::string, std::unordered_set<std::string>>& map);
-	void convertAFNtoAFD(NonDeterministicFiniteAutomaton nfa);
+	DeterministicFiniteAutomaton(const std::unordered_set<std::string>& states,
+		const std::unordered_set<std::string>& alphabet,
+		const std::vector<Tranzition>& tranzitions,
+		const std::string& initialState,
+		const std::unordered_set<std::string>& finalStates);
+
+	std::unordered_set<std::string> getLambdaClose(const std::string& state, const std::vector<Tranzition>& tranzitions);
+	void convertAFNtoAFD(const std::string& regulateExpresionFileName);
+
 	bool VerifyAutomaton();
 	void PrintAutomaton();
 	bool CheckWord(const std::string& word);

@@ -1,5 +1,23 @@
 #include "Automaton.h"
 
+Automaton::AutomatonOperation Automaton::getOperation(char c)
+{
+    if (c == '.')
+    {
+        return AutomatonOperation::CONCATENATION;
+    }
+    else if (c == '|')
+    {
+        return AutomatonOperation::UNION;
+    }
+    else if (c == '*')
+    {
+        return AutomatonOperation::KLEENE_STAR;
+    }
+    return AutomatonOperation::EROOR;
+
+}
+
 int Automaton::priority(AutomatonOperation op)
 {
 	switch (op)
@@ -64,36 +82,28 @@ void Automaton::infixToPostfix()
     }
 }
 
-Automaton::AutomatonOperation Automaton::getOperation(char c)
+void Automaton::ReadRegulateExpression(const std::string& fileName)
 {
-	if (c == '.')
-	{
-		return AutomatonOperation::CONCATENATION;
-	}
-	else if (c == '|')
-	{
-		return AutomatonOperation::UNION;
-	}
-	else if (c == '*')
-	{
-		return AutomatonOperation::KLEENE_STAR;
-	}
-	return AutomatonOperation::EROOR;
-
-}
-
-void Automaton::regulateExpressionToPostfix()
-{
-    if (m_regulateExpression.empty())
+    std::ifstream file(fileName);
+    if (!file.is_open())
     {
-		ReadRegulateExpression("regulateExpression.txt");
-
+        std::cout << "The file " << fileName << " could not be opened\n";
+        return;
     }
-    addConcatenateSimbol();
-    infixToPostfix();
+
+    std::string line;
+    while (std::getline(file, line))
+    {
+        m_regulateExpression += line;
+    }
+    file.close();
 }
 
-Automaton::Automaton(std::unordered_set<std::string> states, std::unordered_set<std::string> alphabet, std::vector<Tranzition> tranzitions, std::string initialState, std::unordered_set<std::string> finalStates):
+Automaton::Automaton(const std::unordered_set<std::string>& states,
+    const std::unordered_set<std::string>& alphabet,
+    const std::vector<Tranzition>& tranzitions,
+    const std::string& initialState,
+    const std::unordered_set<std::string>& finalStates) :
     m_states{ states },
     m_alphabet{ alphabet },
     m_initialState{ initialState },
@@ -102,19 +112,13 @@ Automaton::Automaton(std::unordered_set<std::string> states, std::unordered_set<
 {
 }
 
-void Automaton::ReadRegulateExpression(const std::string& fileName)
+void Automaton::regulateExpressionToPostfix(const std::string& fileName)
 {
-	std::ifstream file(fileName);
-	if (!file.is_open())
-	{
-		std::cout << "The file " << fileName << " could not be opened\n";
-		return;
-	}
+    if (m_regulateExpression.empty())
+    {
+		ReadRegulateExpression(fileName);
 
-	std::string line;
-	while (std::getline(file, line))
-	{
-		m_regulateExpression += line;
-	}
-	file.close();
+    }
+    addConcatenateSimbol();
+    infixToPostfix();
 }

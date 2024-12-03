@@ -62,12 +62,16 @@
 //	m_tranzitions = tranzitions;
 //}
 
-DeterministicFiniteAutomaton::DeterministicFiniteAutomaton(std::unordered_set<std::string> states, std::unordered_set<std::string> alphabet, std::vector<Tranzition> tranzitions, std::string initialState, std::unordered_set<std::string> finalStates):
+DeterministicFiniteAutomaton::DeterministicFiniteAutomaton(const std::unordered_set<std::string>& states,
+	const std::unordered_set<std::string>& alphabet,
+	const std::vector<Tranzition>& tranzitions,
+	const std::string& initialState,
+	const std::unordered_set<std::string>& finalStates):
 	Automaton(states, alphabet, tranzitions, initialState, finalStates)
 {
 }
 
-std::unordered_set<std::string> DeterministicFiniteAutomaton::getLambdaClose(std::string state, std::vector<Tranzition> tranzitions) {
+std::unordered_set<std::string> DeterministicFiniteAutomaton::getLambdaClose(const std::string& state, const std::vector<Tranzition>& tranzitions) {
 	std::unordered_set<std::string> lambdaClose;
 	std::stack<std::string> stackStates;
 	stackStates.push(state);
@@ -87,13 +91,16 @@ std::unordered_set<std::string> DeterministicFiniteAutomaton::getLambdaClose(std
 	return lambdaClose;
 }
 
-void DeterministicFiniteAutomaton::convertAFNtoAFD(NonDeterministicFiniteAutomaton nfa)
+void DeterministicFiniteAutomaton::convertAFNtoAFD(const std::string& regulateExpresionFileName)
 {
+	Automaton::regulateExpressionToPostfix(regulateExpresionFileName);
+	m_nfa.buildAutomaton(GetPostfixPoloishExpression());
+
 	std::unordered_map<std::string, std::unordered_set<std::string>> newStates;
-	std::vector<Tranzition> tranzitions = nfa.GetTranzitions();
+	std::vector<Tranzition> tranzitions = m_nfa.GetTranzitions();
 
 	SetInitialState("q0");
-	SetAlphabet(nfa.GetAlphabet());
+	SetAlphabet(m_nfa.GetAlphabet());
 
 	std::stack<std::string> stackStates;
 	std::string firstLambda = "";
@@ -107,7 +114,7 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(NonDeterministicFiniteAutomat
 
 		AddState(currentState);
 
-		if (nfa.GetFinalStates().find(currentState) != nfa.GetFinalStates().end())
+		if (m_nfa.GetFinalStates().find(currentState) != m_nfa.GetFinalStates().end())
 			AddFinalState(currentState);
 
 		for (auto& tr : tranzitions) {
@@ -123,6 +130,7 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(NonDeterministicFiniteAutomat
 
 		if (firstLambda != "")
 			break;
+
 	}
 
 	//Daca nu am gasit tranzitii lambda, lasam automatul asa cum este
@@ -131,7 +139,7 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(NonDeterministicFiniteAutomat
 
 	//Folosim un algoritm de tip DFS prin care obtinem multimea starilor de tip lambda inchis a primului element care face parte dintr-o tranzitie lambda 
 	//Initializam starea firstLambda din AFD ca fiind multimea lambda inchisa gasita mai sus
-	std::unordered_set<std::string> firstLambdaClose = getLambdaClose(firstLambda, nfa.GetTranzitions());
+	std::unordered_set<std::string> firstLambdaClose = getLambdaClose(firstLambda, m_nfa.GetTranzitions());
 	newStates[firstLambda] = firstLambdaClose;
 	size_t firstLambdaNumber = firstLambda[1] - '0'; //folosit pentru numararea starilor
 
@@ -143,7 +151,7 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(NonDeterministicFiniteAutomat
 		queueStates.pop();
 		AddState(currentState);
 
-		for (std::string symbol : nfa.GetAlphabet()) {
+		for (std::string symbol : m_nfa.GetAlphabet()) {
 
 			std::unordered_set<std::string> statesSet;
 
@@ -178,7 +186,7 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(NonDeterministicFiniteAutomat
 			//Cream functia de lambda inchis pentru starea curenta, care e formata din multimile lambda inchis a starilor din functia sa de tranzitii
 			std::unordered_set<std::string> lambdaClose;
 			for (std::string state : statesSet) {
-				std::unordered_set<std::string> lambdaAux = getLambdaClose(state, nfa.GetTranzitions());
+				std::unordered_set<std::string> lambdaAux = getLambdaClose(state, m_nfa.GetTranzitions());
 				lambdaClose.insert(lambdaAux.begin(), lambdaAux.end());
 			}
 
@@ -195,7 +203,7 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(NonDeterministicFiniteAutomat
 	//Se adauga starile finale
 	for (auto& p : newStates)
 		for (std::string state : p.second)
-			if (nfa.GetFinalStates().find(state) != nfa.GetFinalStates().end())
+			if (m_nfa.GetFinalStates().find(state) != m_nfa.GetFinalStates().end())
 				AddFinalState(state); 
 }
 

@@ -3,7 +3,8 @@
 
 int main()
 {
-	/*DeterministicFiniteAutomaton dfa;
+	DeterministicFiniteAutomaton dfa;
+	dfa.convertAFNtoAFD("regulateExpression.txt");
 	if(dfa.VerifyAutomaton())
 	{
 		dfa.PrintAutomaton();
@@ -18,6 +19,6 @@ int main()
 		{
 			std::cout << "The word is not accepted\n";
 		}
-	}*/
+	}
 
 }

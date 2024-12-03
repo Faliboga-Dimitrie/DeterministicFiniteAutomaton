@@ -11,19 +11,21 @@ class Tranzition
 	bool m_isFinal{ false };
 
 public:
-	Tranzition(std::string fromState, std::string symbol, std::string toState);
+	Tranzition(const std::string& fromState, const std::string& symbol, const std::string& toState);
 
 	void SetInitial(bool isInitial) { m_isInitial = isInitial; }
 	void SetFinal(bool isFinal) { m_isFinal = isFinal; }
 
-	std::string GetFromState() const { return m_fromState; }
-	void SetFromState(std::string fromoState) { m_fromState = fromoState; }
-	std::string GetToState() const { return m_toState; }
-	void SetToState(std::string toState) { m_toState = toState; }
-	std::string GetSymbol() const { return m_symbol; }
+	const std::string& GetFromState() const { return m_fromState; }
+	const std::string& GetToState() const { return m_toState; }
+	const std::string& GetSymbol() const { return m_symbol; }
+
+	void SetFromState(const std::string& fromoState) { m_fromState = fromoState; }
+	void SetToState(const std::string& toState) { m_toState = toState; }
+
 	bool IsInitial() const { return m_isInitial; }
 	bool IsFinal() const { return m_isFinal; }
-	void SetSymbol(std::string symbol) { m_symbol = symbol; }
+	void SetSymbol(const std::string& symbol) { m_symbol = symbol; }
 
 	virtual ~Tranzition() = default;
 };

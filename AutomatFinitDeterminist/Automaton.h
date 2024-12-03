@@ -21,7 +21,6 @@ protected:
 	};
 	AutomatonOperation getOperation(char c);
 
-
 private:
 
 	std::unordered_set<std::string> m_states;
@@ -35,30 +34,36 @@ private:
 	int priority(AutomatonOperation op);
 	void addConcatenateSimbol();
 	void infixToPostfix();
-	
+	void ReadRegulateExpression(const std::string& fileName);
+
 public:
 
 	Automaton() = default;
-	Automaton(std::unordered_set<std::string> states, std::unordered_set<std::string> alphabet, std::vector<Tranzition> tranzitions, std::string initialState, std::unordered_set<std::string> finalStates);
+	Automaton(const std::unordered_set<std::string>& states,
+		const std::unordered_set<std::string>& alphabet,
+		const std::vector<Tranzition>& tranzitions,
+		const std::string& initialState,
+		const std::unordered_set<std::string>& finalStates);
 	Automaton(const Automaton& automaton) = default;
 
-	void ReadRegulateExpression(const std::string& fileName);
 	const std::string& GetPostfixPoloishExpression() const { return m_postfixPoloishExpression; }
 	const std::string& GetInitialState() const { return m_initialState; }
 	const std::unordered_set<std::string>& GetFinalStates() const { return m_finalStates; }
 	const std::unordered_set<std::string>& GetStates() const { return m_states; }
 	const std::unordered_set<std::string>& GetAlphabet() const { return m_alphabet; }
-	void AddState(std::string state) { m_states.insert(state); }
-	void AddFinalState(std::string state) { m_finalStates.insert(state); }
-	void SetInitialState(std::string intialState) { m_initialState = intialState; }
-	void SetFinalStates(std::unordered_set<std::string> finalStates) { m_finalStates = finalStates; }
-	void SetAlphabet(std::unordered_set<std::string> alphabet) { m_alphabet = alphabet; }
-	void SetStates(std::unordered_set<std::string> states) { m_states = states; }
-	void AddSymbol(std::string symbol) { m_alphabet.insert(symbol); }
-	std::vector<Tranzition> GetTranzitions() { return m_tranzitions; }
-	void AddTranzition(Tranzition tranzition) { m_tranzitions.push_back(tranzition); }
+	const std::vector<Tranzition>& GetTranzitions() const { return m_tranzitions; }
 
-	void regulateExpressionToPostfix();
+	void SetInitialState(const std::string& intialState) { m_initialState = intialState; }
+	void SetFinalStates(const std::unordered_set<std::string>& finalStates) { m_finalStates = finalStates; }
+	void SetAlphabet(const std::unordered_set<std::string>& alphabet) { m_alphabet = alphabet; }
+	void SetStates(const std::unordered_set<std::string>& states) { m_states = states; }
+
+	void AddState(const std::string& state) { m_states.insert(state); }
+	void AddFinalState(const std::string& state) { m_finalStates.insert(state); }
+	void AddSymbol(const std::string& symbol) { m_alphabet.insert(symbol); }
+	void AddTranzition(const Tranzition& tranzition) { m_tranzitions.push_back(tranzition); }
+
+	void regulateExpressionToPostfix(const std::string& fileName);
 
 	virtual ~Automaton() = default;
 };
