@@ -87,8 +87,7 @@ void Automaton::ReadRegulateExpression(const std::string& fileName)
     std::ifstream file(fileName);
     if (!file.is_open())
     {
-        std::cout << "The file " << fileName << " could not be opened\n";
-        return;
+        throw std::runtime_error("The file '" + fileName + "' could not be opened.");
     }
 
     std::string line;
@@ -98,6 +97,7 @@ void Automaton::ReadRegulateExpression(const std::string& fileName)
     }
     file.close();
 }
+
 
 Automaton::Automaton(const std::unordered_set<std::string>& states,
     const std::unordered_set<std::string>& alphabet,
@@ -125,38 +125,54 @@ void Automaton::regulateExpressionToPostfix(const std::string& fileName)
 
 void Automaton::PrintAutomaton()
 {
-    int columnWidth = 3;
+    int columnWidth = 10; 
+    for (const auto& state : GetStates())
+        columnWidth = std::max(columnWidth, static_cast<int>(state.length()));
+    for (const auto& symbol : GetAlphabet())
+        columnWidth = std::max(columnWidth, static_cast<int>(symbol.length()));
 
     std::set<std::string, NaturalOrder> states(GetStates().begin(), GetStates().end());
-	std::set<std::string> alphabet(GetAlphabet().begin(), GetAlphabet().end());
-	std::set<std::string> finalStates(GetFinalStates().begin(), GetFinalStates().end());
+    std::set<std::string> alphabet(GetAlphabet().begin(), GetAlphabet().end());
+    std::set<std::string> finalStates(GetFinalStates().begin(), GetFinalStates().end());
 
-    std::cout << "States: ";
+    std::cout << "=============================\n";
+    std::cout << "        AUTOMATON DETAILS\n";
+    std::cout << "=============================\n";
+
+    std::cout << "\nStates:\n";
     for (const auto& state : states)
     {
-        std::cout << state << " ";
+        std::cout << "  - " << state << "\n";
     }
-    std::cout << std::endl;
-    std::cout << "Alphabet: ";
+
+    std::cout << "\nAlphabet:\n";
     for (const auto& symbol : alphabet)
     {
-        std::cout << symbol << " ";
+        std::cout << "  - " << symbol << "\n";
     }
-    std::cout << std::endl;
-    std::cout << "Initial state: " << GetInitialState() << std::endl;
-    std::cout << "Final states: ";
+
+    std::cout << "\nInitial State:\n";
+    std::cout << "  - " << GetInitialState() << "\n";
+
+    std::cout << "\nFinal States:\n";
     for (const auto& state : finalStates)
     {
-        std::cout << state << " ";
+        std::cout << "  - " << state << "\n";
     }
-    std::cout << std::endl;
-    std::cout << "Tranzitions: " << std::endl;
+
+    std::cout << "\nTransition Table:\n";
+    std::cout << std::setw(columnWidth) << "From State"
+        << std::setw(columnWidth) << "Symbol"
+        << std::setw(columnWidth) << "To State" << "\n";
+    std::cout << std::string(columnWidth * 3, '-') << "\n";
+
     for (const auto& tranzition : GetTranzitions())
     {
-        std::cout << std::left
-            << std::setw(columnWidth) << tranzition.GetFromState()
-            << std::setw(columnWidth) << (" -- " + tranzition.GetSymbol() + " --> ")
+        std::cout << std::setw(columnWidth) << tranzition.GetFromState()
+            << std::setw(columnWidth) << tranzition.GetSymbol()
             << std::setw(columnWidth) << tranzition.GetToState()
-            << std::endl;
+            << "\n";
     }
+
+    std::cout << "=============================\n";
 }
