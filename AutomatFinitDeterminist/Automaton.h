@@ -9,6 +9,7 @@
 #include <fstream>
 #include <iomanip>
 #include "Tranzition.h"
+#include "InvalidRegexException.h"
 
 class Automaton
 {
@@ -37,6 +38,7 @@ private:
 	void addConcatenateSimbol();
 	void infixToPostfix();
 	void ReadRegulateExpression(const std::string& fileName);
+	void validateExpression(const std::string& expression);
 
 public:
 

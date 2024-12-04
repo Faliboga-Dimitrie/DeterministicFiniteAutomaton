@@ -31,13 +31,20 @@ int Automaton::priority(AutomatonOperation op)
 
 void Automaton::addConcatenateSimbol()
 {
-    for (size_t i = 0; i < m_regulateExpression.size() - 1; i++)
+    size_t i = 0;
+    while (i < m_regulateExpression.size() - 1)
     {
-        if ((isalnum(m_regulateExpression[i]) || m_regulateExpression[i] == ')' || m_regulateExpression[i] == '*') &&
-            (isalnum(m_regulateExpression[i + 1]) || m_regulateExpression[i + 1] == '('))
+        char curr = m_regulateExpression[i];
+        char next = m_regulateExpression[i + 1];
+
+        if ((isalnum(curr) || curr == ')' || curr == '*') &&
+            (isalnum(next) || next == '('))
         {
-            m_regulateExpression.insert(i + 1, 1, '.');
+            m_regulateExpression.insert(i + 1, 1, '.'); 
+            i++; 
         }
+
+        i++; 
     }
 }
 
@@ -98,6 +105,54 @@ void Automaton::ReadRegulateExpression(const std::string& fileName)
     file.close();
 }
 
+void Automaton::validateExpression(const std::string& expression) {
+    int openParens = 0; 
+    char prevChar = '\0'; 
+
+    for (size_t i = 0; i < expression.length(); ++i) {
+        char c = expression[i];
+
+        if (!isalnum(c) && c != '(' && c != ')' && c != '*' && c != '|' && c != '.') {
+            throw InvalidRegexException("Caracter invalid în expresia regulatã: " + std::string(1, c));
+        }
+
+        if (c == '*' || c == '|' || c == '.') {
+            if (i == 0 || prevChar == '\0' || prevChar == '|' || prevChar == '.' || prevChar == '(') {
+                throw InvalidRegexException("Operator invalid sau plasat incorect în expresia regulatã.");
+            }
+        }
+
+        if (c == '(') {
+            openParens++;
+        }
+        else if (c == ')') {
+            openParens--;
+            if (openParens < 0) { 
+                throw InvalidRegexException("Paranteze închise fãrã corespondent în expresia regulatã.");
+            }
+            if (prevChar == '|' || prevChar == '.' || prevChar == '(') {
+                throw InvalidRegexException("Parantezã închisã dupã un operator invalid.");
+            }
+        }
+
+        if (prevChar == '*' && c == '(') {
+            throw InvalidRegexException("Operator '*' urmat de parantezã deschisã, ceea ce este invalid.");
+        }
+
+        if (!isspace(c)) {
+            prevChar = c;
+        }
+    }
+
+    if (openParens != 0) {
+        throw InvalidRegexException("Parantezele nu sunt echilibrate în expresia regulatã.");
+    }
+    if (prevChar == '|' || prevChar == '.' || prevChar == '(') {
+        throw InvalidRegexException("Expresia regulatã se terminã cu un operator sau parantezã deschisã.");
+    }
+}
+
+
 
 Automaton::Automaton(const std::unordered_set<std::string>& states,
     const std::unordered_set<std::string>& alphabet,
@@ -117,7 +172,7 @@ void Automaton::regulateExpressionToPostfix(const std::string& fileName)
     if (m_regulateExpression.empty())
     {
 		ReadRegulateExpression(fileName);
-
+		validateExpression(m_regulateExpression);
     }
     addConcatenateSimbol();
     infixToPostfix();

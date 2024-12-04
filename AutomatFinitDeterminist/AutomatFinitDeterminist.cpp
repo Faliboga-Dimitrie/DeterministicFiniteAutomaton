@@ -21,6 +21,10 @@ int main() {
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;
     }
+    catch (const InvalidRegexException& ex) 
+    {
+        std::cerr << "Eroare: " << ex.what() << '\n';
+    }
 
     std::string automatonData((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     file.close();

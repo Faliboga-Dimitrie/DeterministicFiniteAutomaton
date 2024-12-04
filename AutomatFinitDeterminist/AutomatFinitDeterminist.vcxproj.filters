@@ -30,6 +30,9 @@
     <ClCompile Include="NonDeterministicFiniteAutomaton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="InvalidRegexException.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeterministicFiniteAutomaton.h">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NonDeterministicFiniteAutomaton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InvalidRegexException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

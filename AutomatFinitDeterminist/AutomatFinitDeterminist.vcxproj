@@ -130,12 +130,14 @@
     <ClCompile Include="AutomatFinitDeterminist.cpp" />
     <ClCompile Include="Automaton.cpp" />
     <ClCompile Include="DeterministicFiniteAutomaton.cpp" />
+    <ClCompile Include="InvalidRegexException.cpp" />
     <ClCompile Include="NonDeterministicFiniteAutomaton.cpp" />
     <ClCompile Include="Tranzition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Automaton.h" />
     <ClInclude Include="DeterministicFiniteAutomaton.h" />
+    <ClInclude Include="InvalidRegexException.h" />
     <ClInclude Include="NonDeterministicFiniteAutomaton.h" />
     <ClInclude Include="Tranzition.h" />
   </ItemGroup>
