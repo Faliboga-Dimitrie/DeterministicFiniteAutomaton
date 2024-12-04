@@ -125,21 +125,27 @@ void Automaton::regulateExpressionToPostfix(const std::string& fileName)
 
 void Automaton::PrintAutomaton()
 {
+    int columnWidth = 3;
+
+    std::set<std::string, NaturalOrder> states(GetStates().begin(), GetStates().end());
+	std::set<std::string> alphabet(GetAlphabet().begin(), GetAlphabet().end());
+	std::set<std::string> finalStates(GetFinalStates().begin(), GetFinalStates().end());
+
     std::cout << "States: ";
-    for (const auto& state : GetStates())
+    for (const auto& state : states)
     {
         std::cout << state << " ";
     }
     std::cout << std::endl;
     std::cout << "Alphabet: ";
-    for (const auto& symbol : GetAlphabet())
+    for (const auto& symbol : alphabet)
     {
         std::cout << symbol << " ";
     }
     std::cout << std::endl;
     std::cout << "Initial state: " << GetInitialState() << std::endl;
     std::cout << "Final states: ";
-    for (const auto& state : GetFinalStates())
+    for (const auto& state : finalStates)
     {
         std::cout << state << " ";
     }
@@ -147,6 +153,10 @@ void Automaton::PrintAutomaton()
     std::cout << "Tranzitions: " << std::endl;
     for (const auto& tranzition : GetTranzitions())
     {
-        std::cout << tranzition.GetFromState() << " -- " << tranzition.GetSymbol() << " --> " << tranzition.GetToState() << std::endl;
+        std::cout << std::left
+            << std::setw(columnWidth) << tranzition.GetFromState()
+            << std::setw(columnWidth) << (" -- " + tranzition.GetSymbol() + " --> ")
+            << std::setw(columnWidth) << tranzition.GetToState()
+            << std::endl;
     }
 }

@@ -1,11 +1,13 @@
 #pragma once
 #include <vector>
 #include <unordered_set>
+#include <set>
 #include <functional>
 #include <stack>
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <iomanip>
 #include "Tranzition.h"
 
 class Automaton
@@ -67,5 +69,16 @@ public:
 	void PrintAutomaton();
 
 	virtual ~Automaton() = default;
+
+	struct NaturalOrder
+	{
+		bool operator()(const std::string& lhs, const std::string& rhs) const
+		{
+			// Extrage numerele dupã "q"
+			int num1 = std::stoi(lhs.substr(1));
+			int num2 = std::stoi(rhs.substr(1));
+			return num1 < num2;
+		}
+	};
 };
 
