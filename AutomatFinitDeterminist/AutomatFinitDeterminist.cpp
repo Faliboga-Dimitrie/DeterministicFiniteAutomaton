@@ -29,7 +29,7 @@ int main() {
         std::cout << "Automaton loaded successfully!\n\n";
         std::cout << "Automaton details:\n";
         dfa.PrintAutomaton();
-        std::cout <<"Expresia regulata pe care se bazeaza automatul: " << automatonData << "\n";
+        std::cout <<"Expresia regulata on witch the automaton is based on: " << automatonData << "\n";
         do {
             std::string word;
             std::cout << "\nEnter a word to check if it is accepted by the automaton: ";
