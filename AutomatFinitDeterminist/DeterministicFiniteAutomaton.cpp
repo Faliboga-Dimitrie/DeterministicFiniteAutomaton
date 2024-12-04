@@ -37,12 +37,12 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(const std::string& regulateEx
 	std::unordered_map<std::string, std::unordered_set<std::string>> newStates;
 	std::vector<Tranzition> tranzitions = m_nfa.GetTranzitions();
 
-	SetInitialState("q0");
+	SetInitialState(m_nfa.GetInitialState());
 	SetAlphabet(m_nfa.GetAlphabet());
 
 	std::stack<std::string> stackStates;
 	std::string firstLambda = "";
-	stackStates.push("q0");
+	stackStates.push(m_nfa.GetInitialState());
 
 	//Folosim un algoritm de tip DFS cu care parcurgem AFNul si punem toate starile 
 	//care fac parte dintr-o tranzitie non-lambda in AFD pana gasim o tranzitie lambda
