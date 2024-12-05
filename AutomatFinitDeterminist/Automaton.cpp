@@ -113,12 +113,12 @@ void Automaton::validateExpression(const std::string& expression) {
         char c = expression[i];
 
         if (!isalnum(c) && c != '(' && c != ')' && c != '*' && c != '|' && c != '.') {
-            throw InvalidRegexException("Caracter invalid în expresia regulatã: " + std::string(1, c));
+            throw InvalidRegexException("Invalid character in the regular expression:" + std::string(1, c));
         }
 
         if (c == '*' || c == '|' || c == '.') {
-            if (i == 0 || prevChar == '\0' || prevChar == '|' || prevChar == '.' || prevChar == '(') {
-                throw InvalidRegexException("Operator invalid sau plasat incorect în expresia regulatã.");
+            if (i == 0 || prevChar == '\0' || prevChar == '|' || prevChar == '.' || prevChar == '(' || prevChar == '*') {
+                throw InvalidRegexException("Invalid operator or incorrectly placed operator in the regular expression.");
             }
         }
 
@@ -128,15 +128,15 @@ void Automaton::validateExpression(const std::string& expression) {
         else if (c == ')') {
             openParens--;
             if (openParens < 0) { 
-                throw InvalidRegexException("Paranteze închise fãrã corespondent în expresia regulatã.");
+                throw InvalidRegexException("Closed parentheses without a matching pair in the regular expression.");
             }
             if (prevChar == '|' || prevChar == '.' || prevChar == '(') {
-                throw InvalidRegexException("Parantezã închisã dupã un operator invalid.");
+                throw InvalidRegexException("Closed parenthesis after an invalid operator.");
             }
         }
 
         if (prevChar == '*' && c == '(') {
-            throw InvalidRegexException("Operator '*' urmat de parantezã deschisã, ceea ce este invalid.");
+            throw InvalidRegexException("The '*' operator followed by an open parenthesis, which is invalid.");
         }
 
         if (!isspace(c)) {
@@ -145,10 +145,10 @@ void Automaton::validateExpression(const std::string& expression) {
     }
 
     if (openParens != 0) {
-        throw InvalidRegexException("Parantezele nu sunt echilibrate în expresia regulatã.");
+        throw InvalidRegexException("The parentheses are not balanced in the regular expression.");
     }
     if (prevChar == '|' || prevChar == '.' || prevChar == '(') {
-        throw InvalidRegexException("Expresia regulatã se terminã cu un operator sau parantezã deschisã.");
+        throw InvalidRegexException("The regular expression ends with an operator or an open parenthesis.");
     }
 }
 
@@ -178,7 +178,7 @@ void Automaton::regulateExpressionToPostfix(const std::string& fileName)
     infixToPostfix();
 }
 
-void Automaton::PrintAutomaton()
+void Automaton::PrintAutomaton(std::ofstream& automatonOutputFile, bool inFile)
 {
     int columnWidth = 10; 
     for (const auto& state : GetStates())
@@ -190,44 +190,105 @@ void Automaton::PrintAutomaton()
     std::set<std::string> alphabet(GetAlphabet().begin(), GetAlphabet().end());
     std::set<std::string> finalStates(GetFinalStates().begin(), GetFinalStates().end());
 
-    std::cout << "=============================\n";
-    std::cout << "        AUTOMATON DETAILS\n";
-    std::cout << "=============================\n";
+    if (!inFile)
+    {
+        std::cout << "=============================\n";
+        std::cout << "        AUTOMATON DETAILS\n";
+        std::cout << "=============================\n";
+    }
+    else
+    {
+		automatonOutputFile << "=============================\n";
+		automatonOutputFile << "        AUTOMATON DETAILS\n";
+		automatonOutputFile << "=============================\n";
+    }
 
-    std::cout << "\nStates:\n";
+	if (!inFile)
+		std::cout << "\nStates:\n";
+	else
+		automatonOutputFile << "\nStates:\n";
     for (const auto& state : states)
     {
-        std::cout << "  - " << state << "\n";
+		if (!inFile)
+			std::cout << "  - " << state << "\n";
+		else
+			automatonOutputFile << "  - " << state << "\n";
     }
 
-    std::cout << "\nAlphabet:\n";
+	if (!inFile)
+        std::cout << "\nAlphabet:\n";
+	else
+		automatonOutputFile << "\nAlphabet:\n";
+
     for (const auto& symbol : alphabet)
     {
-        std::cout << "  - " << symbol << "\n";
+		if (!inFile)
+            std::cout << "  - " << symbol << "\n";
+		else
+			automatonOutputFile << "  - " << symbol << "\n";
     }
 
-    std::cout << "\nInitial State:\n";
-    std::cout << "  - " << GetInitialState() << "\n";
+    if (!inFile)
+    {
+        std::cout << "\nInitial State:\n";
+        std::cout << "  - " << GetInitialState() << "\n";
+    }
+    else
+	{
+		automatonOutputFile << "\nInitial State:\n";
+		automatonOutputFile << "  - " << GetInitialState() << "\n";
+	}
 
-    std::cout << "\nFinal States:\n";
+	if (!inFile)
+        std::cout << "\nFinal States:\n";
+	else
+		automatonOutputFile << "\nFinal States:\n";
+
     for (const auto& state : finalStates)
     {
-        std::cout << "  - " << state << "\n";
+		if (!inFile)
+			std::cout << "  - " << state << "\n";
+		else
+			automatonOutputFile << "  - " << state << "\n";
     }
 
-    std::cout << "\nTransition Table:\n";
-    std::cout << std::setw(columnWidth) << "From State"
-        << std::setw(columnWidth) << "Symbol"
-        << std::setw(columnWidth) << "To State" << "\n";
-    std::cout << std::string(columnWidth * 3, '-') << "\n";
+    if (!inFile)
+    {
+		std::cout << "\nTranzitions:\n";
+		std::cout << std::setw(columnWidth) << "From"
+			<< std::setw(columnWidth) << "Symbol"
+			<< std::setw(columnWidth) << "To"
+			<< "\n";
+	}
+	else
+	{
+		automatonOutputFile << "\nTranzitions:\n";
+		automatonOutputFile << std::setw(columnWidth) << "From"
+			<< std::setw(columnWidth) << "Symbol"
+			<< std::setw(columnWidth) << "To"
+			<< "\n";
+	}
 
     for (const auto& tranzition : GetTranzitions())
     {
-        std::cout << std::setw(columnWidth) << tranzition.GetFromState()
-            << std::setw(columnWidth) << tranzition.GetSymbol()
-            << std::setw(columnWidth) << tranzition.GetToState()
-            << "\n";
+        if (!inFile)
+        {
+            std::cout << std::setw(columnWidth) << tranzition.GetFromState()
+                << std::setw(columnWidth) << tranzition.GetSymbol()
+                << std::setw(columnWidth) << tranzition.GetToState()
+                << "\n";
+        }
+        else
+        {
+            automatonOutputFile << std::setw(columnWidth) << tranzition.GetFromState()
+                << std::setw(columnWidth) << tranzition.GetSymbol()
+                << std::setw(columnWidth) << tranzition.GetToState()
+                << "\n";
+        }
     }
 
-    std::cout << "=============================\n";
+	if (!inFile)
+		std::cout << "=============================\n";
+	else
+		automatonOutputFile << "=============================\n";
 }

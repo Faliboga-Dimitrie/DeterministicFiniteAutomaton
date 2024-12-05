@@ -147,7 +147,6 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(const std::string& regulateEx
 
 bool DeterministicFiniteAutomaton::VerifyAutomaton()
 {
-	//AFNtoAFD();
 	std::string firstSimbol = GetPostfixPoloishExpression().substr(0, 1);
 	if (GetStates().empty())
 	{

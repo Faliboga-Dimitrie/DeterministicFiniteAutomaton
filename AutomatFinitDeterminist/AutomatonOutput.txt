@@ -1,0 +1,54 @@
+The automate is:
+=============================
+        AUTOMATON DETAILS
+=============================
+
+States:
+  - q0
+  - q2
+  - q12
+  - q13
+  - q14
+  - q15
+  - q16
+  - q17
+  - q18
+  - q19
+  - q20
+
+Alphabet:
+  - a
+  - c
+  - d
+
+Initial State:
+  - q0
+
+Final States:
+  - q17
+  - q19
+  - q20
+
+Tranzitions:
+      From    Symbol        To
+        q0         a        q2
+        q2         a       q12
+       q12         a       q13
+       q12         c       q14
+       q12         d       q15
+       q13         c       q16
+       q14         a       q13
+       q14         c       q14
+       q14         d       q15
+       q15         c       q17
+       q16         a       q13
+       q16         c       q14
+       q16         d       q15
+       q17         a       q18
+       q17         c       q19
+       q18         a       q20
+       q19         a       q18
+       q19         c       q19
+       q20         a       q18
+       q20         c       q19
+=============================

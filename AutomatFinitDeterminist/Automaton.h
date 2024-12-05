@@ -68,7 +68,7 @@ public:
 	void AddTranzition(const Tranzition& tranzition) { m_tranzitions.push_back(tranzition); }
 
 	void regulateExpressionToPostfix(const std::string& fileName);
-	void PrintAutomaton();
+	void PrintAutomaton(std::ofstream& automatonOutputFile, bool inFile);
 
 	virtual ~Automaton() = default;
 

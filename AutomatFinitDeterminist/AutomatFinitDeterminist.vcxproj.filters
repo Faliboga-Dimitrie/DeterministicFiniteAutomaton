@@ -53,5 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="regulateExpression.txt" />
+    <Text Include="AutomatonOutput.txt" />
   </ItemGroup>
 </Project>

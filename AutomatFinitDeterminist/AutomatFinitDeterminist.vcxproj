@@ -142,6 +142,7 @@
     <ClInclude Include="Tranzition.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="AutomatonOutput.txt" />
     <Text Include="regulateExpression.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
