@@ -15,7 +15,6 @@ Automaton::AutomatonOperation Automaton::getOperation(char c)
         return AutomatonOperation::KLEENE_STAR;
     }
     return AutomatonOperation::EROOR;
-
 }
 
 int Automaton::priority(AutomatonOperation op)
@@ -43,7 +42,6 @@ void Automaton::addConcatenateSimbol()
             m_regulateExpression.insert(i + 1, 1, '.'); 
             i++; 
         }
-
         i++; 
     }
 }
@@ -152,8 +150,6 @@ void Automaton::validateExpression(const std::string& expression) {
     }
 }
 
-
-
 Automaton::Automaton(const std::unordered_set<std::string>& states,
     const std::unordered_set<std::string>& alphabet,
     const std::vector<Tranzition>& tranzitions,
@@ -195,18 +191,16 @@ void Automaton::PrintAutomaton(std::ofstream& automatonOutputFile, bool inFile)
         std::cout << "=============================\n";
         std::cout << "        AUTOMATON DETAILS\n";
         std::cout << "=============================\n";
+        std::cout << "\nStates:\n";
     }
     else
     {
 		automatonOutputFile << "=============================\n";
 		automatonOutputFile << "        AUTOMATON DETAILS\n";
 		automatonOutputFile << "=============================\n";
-    }
+        automatonOutputFile << "\nStates:\n";
+    }	
 
-	if (!inFile)
-		std::cout << "\nStates:\n";
-	else
-		automatonOutputFile << "\nStates:\n";
     for (const auto& state : states)
     {
 		if (!inFile)
@@ -232,17 +226,14 @@ void Automaton::PrintAutomaton(std::ofstream& automatonOutputFile, bool inFile)
     {
         std::cout << "\nInitial State:\n";
         std::cout << "  - " << GetInitialState() << "\n";
+        std::cout << "\nFinal States:\n";
     }
     else
 	{
 		automatonOutputFile << "\nInitial State:\n";
 		automatonOutputFile << "  - " << GetInitialState() << "\n";
+        automatonOutputFile << "\nFinal States:\n";
 	}
-
-	if (!inFile)
-        std::cout << "\nFinal States:\n";
-	else
-		automatonOutputFile << "\nFinal States:\n";
 
     for (const auto& state : finalStates)
     {
@@ -291,4 +282,15 @@ void Automaton::PrintAutomaton(std::ofstream& automatonOutputFile, bool inFile)
 		std::cout << "=============================\n";
 	else
 		automatonOutputFile << "=============================\n";
+}
+
+void Automaton::clearAutomaton()
+{
+	m_states.clear();
+	m_alphabet.clear();
+	m_initialState.clear();
+	m_finalStates.clear();
+	m_regulateExpression.clear();
+	m_postfixPoloishExpression.clear();
+	m_tranzitions.clear();
 }

@@ -48,9 +48,7 @@ void NonDeterministicFiniteAutomaton::buildAutomaton(const std::string& regulate
 
 	for (size_t i = 1; i < regulateExpression.length(); i++)
 	{
-
 		std::unordered_set<std::string> currentStates;
-
 		std::unordered_set<std::string> currentAlphabet;
 		std::vector<Tranzition> currentTranzition;
 		std::string currentInState;
@@ -171,7 +169,7 @@ void NonDeterministicFiniteAutomaton::buildAutomaton(const std::string& regulate
 
 			break;
 		}
-		default: // Caz pentru caractere (simboluri din alfabet)
+		default:
 		{
 			std::string symbol = regulateExpression.substr(i, 1);
 
@@ -199,4 +197,9 @@ void NonDeterministicFiniteAutomaton::buildAutomaton(const std::string& regulate
 		}
 	}
 	*this = automatons.top();
+}
+
+void NonDeterministicFiniteAutomaton::clearNonDeterministicFiniteAutomaton()
+{
+	Automaton::clearAutomaton();
 }

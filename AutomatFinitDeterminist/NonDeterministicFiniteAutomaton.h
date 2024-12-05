@@ -15,9 +15,7 @@ public:
 	NonDeterministicFiniteAutomaton(const NonDeterministicFiniteAutomaton& automaton);
 
 	void buildAutomaton(const std::string& regulateExpression);
-
-	/*std::unordered_set<std::string> EClosure(const std::unordered_set<std::string>& states);
-	std::unordered_set<std::string> Move(const std::unordered_set<std::string>& states, const std::string& symbol);*/
+	void clearNonDeterministicFiniteAutomaton();
 
 	~NonDeterministicFiniteAutomaton() override = default;
 };

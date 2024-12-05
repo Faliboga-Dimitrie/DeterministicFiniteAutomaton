@@ -1,1 +1,1 @@
-aa(ac|c)*dc(aa|c)*
+df(01|0)*ee

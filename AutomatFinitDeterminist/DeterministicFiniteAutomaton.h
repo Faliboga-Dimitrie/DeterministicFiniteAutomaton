@@ -5,10 +5,7 @@
 
 class DeterministicFiniteAutomaton : public Automaton
 {
-	
 	NonDeterministicFiniteAutomaton m_nfa;
-
-	//void AFNtoAFD();
 	
 public:
 	DeterministicFiniteAutomaton() = default;
@@ -23,6 +20,7 @@ public:
 
 	bool VerifyAutomaton();
 	bool CheckWord(const std::string& word);
+	void clearDeterministicFiniteAutomaton();
 
 	~DeterministicFiniteAutomaton() override = default;
 };

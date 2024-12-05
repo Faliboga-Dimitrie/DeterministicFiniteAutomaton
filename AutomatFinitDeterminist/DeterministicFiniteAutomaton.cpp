@@ -14,7 +14,6 @@ std::unordered_set<std::string> DeterministicFiniteAutomaton::getLambdaClose(con
 	std::stack<std::string> stackStates;
 	stackStates.push(state);
 
-	//Folosim un algoritm de tip DFS prin care adaugam toate starile conectate catre starea initiala care fac parte dintr-o tranzitie lambda
 	while (!stackStates.empty()) {
 		std::string currentState = stackStates.top();
 		lambdaClose.insert(currentState);
@@ -25,7 +24,6 @@ std::unordered_set<std::string> DeterministicFiniteAutomaton::getLambdaClose(con
 				stackStates.push(tr.GetToState());
 		}
 	}
-
 	return lambdaClose;
 }
 
@@ -44,8 +42,6 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(const std::string& regulateEx
 	std::string firstLambda = "";
 	stackStates.push(m_nfa.GetInitialState());
 
-	//Folosim un algoritm de tip DFS cu care parcurgem AFNul si punem toate starile 
-	//care fac parte dintr-o tranzitie non-lambda in AFD pana gasim o tranzitie lambda
 	while (!stackStates.empty()) {
 		std::string currentState = stackStates.top();
 		stackStates.pop();
@@ -68,18 +64,14 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(const std::string& regulateEx
 
 		if (firstLambda != "")
 			break;
-
 	}
 
-	//Daca nu am gasit tranzitii lambda, lasam automatul asa cum este
 	if (firstLambda == "")
 		return;
 
-	//Folosim un algoritm de tip DFS prin care obtinem multimea starilor de tip lambda inchis a primului element care face parte dintr-o tranzitie lambda 
-	//Initializam starea firstLambda din AFD ca fiind multimea lambda inchisa gasita mai sus
 	std::unordered_set<std::string> firstLambdaClose = getLambdaClose(firstLambda, m_nfa.GetTranzitions());
 	newStates[firstLambda] = firstLambdaClose;
-	size_t firstLambdaNumber = std::stoi(firstLambda.substr(1)); //folosit pentru numararea starilor
+	size_t firstLambdaNumber = std::stoi(firstLambda.substr(1)); 
 
 	std::queue<std::string> queueStates;
 	queueStates.push(firstLambda);
@@ -90,34 +82,27 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(const std::string& regulateEx
 		AddState(currentState);
 
 		for (std::string symbol : m_nfa.GetAlphabet()) {
-
 			bool foundState = false;
 			std::unordered_set<std::string> statesSet;
 
-			//Cream functia de tranzitii pentru starea curenta
 			for (std::string state : newStates[currentState]) {
 
 				for (auto& tr : tranzitions) {
 
 					if (tr.GetFromState() == state && tr.GetSymbol() == symbol)
 						statesSet.insert(tr.GetToState());
-
 				}
 			}
 
-			//Daca setul ramane gol dupa cautare, atunci aceasta tranzitie va duce catre multimea vida
 			if (statesSet.empty())
 				continue;
 
-			//Daca nu exista in map, atunci trebuia sa cream o noua stare
-			//Cream functia de lambda inchis pentru starea curenta, care e formata din multimile lambda inchis a starilor din functia sa de tranzitii
 			std::unordered_set<std::string> lambdaClose;
 			for (std::string state : statesSet) {
 				std::unordered_set<std::string> lambdaAux = getLambdaClose(state, m_nfa.GetTranzitions());
 				lambdaClose.insert(lambdaAux.begin(), lambdaAux.end());
 			}
 
-			//Daca aceasta functie de tranziti exista deja in map-ul nostru, atunci tranzitia va fi intre currentState si cealalta stare deja existenta
 			for (auto& p : newStates) {
 				if (p.second == lambdaClose) {
 					AddTranzition({ currentState, symbol, p.first });
@@ -128,7 +113,6 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(const std::string& regulateEx
 			if (foundState)
 				continue;
 
-			//Noua stare cu care currentState este in relatie de tranzitie se va adauga in queue
 			std::string nextState = "q" + std::to_string(++firstLambdaNumber);
 			queueStates.push(nextState);
 
@@ -138,7 +122,6 @@ void DeterministicFiniteAutomaton::convertAFNtoAFD(const std::string& regulateEx
 		}
 	}
 
-	//Se adauga starile finale
 	for (auto& p : newStates)
 		for (std::string state : p.second)
 			if (m_nfa.GetFinalStates().find(state) != m_nfa.GetFinalStates().end())
@@ -245,6 +228,13 @@ bool DeterministicFiniteAutomaton::CheckWord(const std::string& word)
 
 	return true;
 }
+
+void DeterministicFiniteAutomaton::clearDeterministicFiniteAutomaton()
+{
+	Automaton::clearAutomaton();
+	m_nfa.clearNonDeterministicFiniteAutomaton();
+}
+
 
 
 
