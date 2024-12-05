@@ -104,7 +104,8 @@ int main()
             switch (switchOption)
             {
             case switchOptions::PrintRegulateExpression:
-                std::cout << "\033[36mThe regular expression is: \033[0m" << automatonData << "\n";
+                std::cout << "\033[36mThe regular expression is: \033[0m" << automatonData << "\n\n";
+				std::cout << "To see the menu options, press 5.\n";
                 break;
             case switchOptions::PrintAutomaton:
                 dfa.PrintAutomaton(automatonOutputFile, false);
@@ -121,7 +122,8 @@ int main()
                 std::cin >> word;
                 bool isAccepted = dfa.CheckWord(word);
                 std::cout << "The word '" << word << "' is ";
-                std::cout << (isAccepted ? "\033[32m**ACCEPTED**" : "\033[31m**NOT ACCEPTED**") << "\033[0m by the automaton.\n";
+                std::cout << (isAccepted ? "\033[32m**ACCEPTED**" : "\033[31m**NOT ACCEPTED**") << "\033[0m by the automaton.\n\n";
+                std::cout << "To see the menu options, press 5.\n";
                 break;
             }
             case switchOptions::ChangeRegulateExpression:
@@ -143,11 +145,15 @@ int main()
 
                 try {
                     dfa.convertAFNtoAFD("regulateExpression.txt");
-                    std::cout << "\033[32mAutomaton updated successfully with the new regular expression.\033[0m\n";
+                    std::cout << "\033[32mAutomaton updated successfully with the new regular expression.\033[0m\n\n";
                 }
                 catch (const std::runtime_error& e) {
                     std::cerr << "\033[31mError: " << e.what() << "\033[0m\n";
                 }
+				catch (const InvalidRegexException& ex) {
+					std::cerr << "\033[31mError: " << ex.what() << "\033[0m\n";
+				}
+				displayOptionMenu();
                 break;
             }
             case switchOptions::DispayOptionMenu:
@@ -167,12 +173,14 @@ int main()
                     system("cls");
                 }
                 else {
-                    std::cout << "Returning to the menu...\n";
+                    std::cout << "Returning to the menu...\n\n";
+					displayOptionMenu();
                 }
                 break;
             }
             default:
                 std::cout << "\033[31mInvalid option. Please try again.\033[0m\n";
+                std::cout << "To see the menu options, press 5.\n";
                 break;
             }
         }

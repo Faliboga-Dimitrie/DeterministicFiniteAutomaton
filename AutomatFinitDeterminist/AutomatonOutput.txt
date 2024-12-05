@@ -1,0 +1,22 @@
+The automaton is:
+=============================
+        AUTOMATON DETAILS
+=============================
+
+States:
+  - q0
+  - q1
+
+Alphabet:
+  - a
+
+Initial State:
+  - q0
+
+Final States:
+  - q1
+
+Tranzitions:
+      From    Symbol        To
+        q0         a        q1
+=============================

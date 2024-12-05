@@ -42,7 +42,10 @@ void NonDeterministicFiniteAutomaton::buildAutomaton(const std::string& regulate
 	statesCounter += 2;
 
 	if (regulateExpression.length() == 1)
+	{
+		*this = firstAutomaton;
 		return;
+	}
 
 	automatons.push(firstAutomaton);
 
