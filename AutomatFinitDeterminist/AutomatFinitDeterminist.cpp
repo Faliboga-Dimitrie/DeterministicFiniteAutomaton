@@ -164,6 +164,7 @@ int main()
                 std::cin >> confirmation;
                 if (confirmation == "yes" || confirmation == "y") {
                     isRunning = false;
+                    system("cls");
                 }
                 else {
                     std::cout << "Returning to the menu...\n";
