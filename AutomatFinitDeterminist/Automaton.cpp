@@ -115,7 +115,7 @@ void Automaton::validateExpression(const std::string& expression) {
         }
 
         if (c == '*' || c == '|' || c == '.') {
-            if (i == 0 || prevChar == '\0' || prevChar == '|' || prevChar == '.' || prevChar == '(' || prevChar == '*') {
+            if (i == 0 || prevChar == '\0' || prevChar == '|' || prevChar == '.' || prevChar == '(') {
                 throw InvalidRegexException("Invalid operator or incorrectly placed operator in the regular expression.");
             }
         }
@@ -131,10 +131,6 @@ void Automaton::validateExpression(const std::string& expression) {
             if (prevChar == '|' || prevChar == '.' || prevChar == '(') {
                 throw InvalidRegexException("Closed parenthesis after an invalid operator.");
             }
-        }
-
-        if (prevChar == '*' && c == '(') {
-            throw InvalidRegexException("The '*' operator followed by an open parenthesis, which is invalid.");
         }
 
         if (!isspace(c)) {
